@@ -15,13 +15,27 @@ input LoginInput {
   password: String!
 }
 
+type LoginUser {
+  email: String!
+  firstName: String!
+  id: ID!
+  isActivated: Boolean!
+  lastName: String!
+}
+
+type LoginUserData {
+  accessToken: String!
+  refreshToken: String!
+  user: LoginUser!
+}
+
 type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   registration(registrationUserInput: RegistrationUserInput!): RegistratedUserData!
 }
 
 type Query {
-  login(loginInput: LoginInput!): [User!]!
+  login(loginInput: LoginInput!): LoginUserData!
   usersList: [User!]!
 }
 
