@@ -1,4 +1,4 @@
-import { ObjectType, Field, ID, OmitType } from '@nestjs/graphql';
+import { ObjectType, Field } from '@nestjs/graphql';
 
 @ObjectType()
 export class LogoutData {

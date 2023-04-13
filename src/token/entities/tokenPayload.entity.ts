@@ -3,6 +3,6 @@ import { User } from 'src/users/entities/user.entity';
 
 @ObjectType()
 export class TokenPayload extends PickType(User, [
-    "email",
-    "isActivated"
+  'email',
+  'isActivated',
 ] as const) {}

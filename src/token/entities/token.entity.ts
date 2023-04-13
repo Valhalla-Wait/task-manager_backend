@@ -1,8 +1,7 @@
-import { ObjectType, Field, OmitType, Int, ID } from '@nestjs/graphql';
+import { ObjectType, Field, ID } from '@nestjs/graphql';
 
 @ObjectType()
 export class Token {
-
   @Field(() => ID)
   userId: number;
 

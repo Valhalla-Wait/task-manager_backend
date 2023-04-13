@@ -7,74 +7,74 @@ import { TokenPayload } from './entities/tokenPayload.entity';
 
 @Injectable()
 export class TokenService {
-    constructor(private jwtService:JwtService, private prisma:PrismaService){}
+  constructor(private jwtService: JwtService, private prisma: PrismaService) {}
 
-    generateTokens(payload:GenerateTokenInput) {
-        const accessToken = this.jwtService.sign(payload)
-        const refreshToken = this.jwtService.sign(payload, {expiresIn: '7d'})
-        return {
-            accessToken,
-            refreshToken
-        }
+  generateTokens(payload: GenerateTokenInput) {
+    const accessToken = this.jwtService.sign(payload);
+    const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
+    return {
+      accessToken,
+      refreshToken,
+    };
+  }
+
+  async saveToken(data: SaveTokenInput) {
+    const tokenData = await this.prisma.token.findFirst({
+      where: {
+        userId: data.userId,
+      },
+    });
+    if (tokenData) {
+      return this.prisma.token.update({
+        where: {
+          userId: tokenData.userId,
+        },
+        data: {
+          refreshToken: data.refreshToken,
+        },
+      });
     }
+    const token = await this.prisma.token.create({ data });
+    return token;
+  }
 
-    async saveToken(data:SaveTokenInput) {
-        const tokenData = await this.prisma.token.findFirst({
-            where:{
-                userId: data.userId
-            }
-        })
-        if(tokenData){
-            return this.prisma.token.update({
-                where:{
-                    userId: tokenData.userId
-                },
-                data: {
-                    refreshToken: data.refreshToken
-                }
-            })
-        }
-        const token = await this.prisma.token.create({data})
-        return token
+  async removeToken(userId: number) {
+    const tokenData = await this.prisma.token.delete({
+      where: {
+        userId,
+      },
+    });
+    return tokenData;
+  }
+
+  async findTokenByUserId(userId: number) {
+    const tokenData = await this.prisma.token.findFirst({
+      where: {
+        userId,
+      },
+    });
+    return tokenData;
+  }
+
+  validateAcceessToken(token: string) {
+    try {
+      const userData = this.jwtService.verify(token, {
+        secret: process.env.SECRET_KEY,
+      });
+      return userData;
+    } catch (e) {
+      return null;
     }
+  }
 
-    async removeToken(userId: number) {
-        const tokenData = await this.prisma.token.delete({
-            where: {
-                userId
-            }
-        })
-        return tokenData
+  validateRefreshToken(refreshToken: string) {
+    try {
+      const userData = this.jwtService.verify<TokenPayload>(refreshToken, {
+        secret: process.env.SECRET_KEY,
+      });
+      return userData;
+    } catch (e) {
+      return null;
     }
-
-    async findTokenByUserId(userId: number) {
-        const tokenData = await this.prisma.token.findFirst({
-            where: {
-                userId
-            }
-        })
-        return tokenData
-    }
-
-    validateAcceessToken(token:string) {
-        try {
-            const userData = this.jwtService.verify(token, {
-                secret: process.env.SECRET_KEY
-            })
-            return userData
-        } catch (e) {
-            return null
-        }
-      }
-    
-      validateRefreshToken(refreshToken:string) {
-        try {
-            const userData = this.jwtService.verify<TokenPayload>(refreshToken, {
-                secret: process.env.SECRET_KEY
-            })
-            return userData
-        } catch (e) {
-          return null
-        }
-      }
+  }
 }
