@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/db/prisma.service';
 import { SaveTokenInput } from './dto/save-token.input';
 import { GenerateTokenInput } from './dto/generate-token.input copy';
+import { TokenPayload } from './entities/tokenPayload.entity';
 
 @Injectable()
 export class TokenService {
@@ -45,4 +46,35 @@ export class TokenService {
         })
         return tokenData
     }
+
+    async findTokenByUserId(userId: number) {
+        const tokenData = await this.prisma.token.findFirst({
+            where: {
+                userId
+            }
+        })
+        return tokenData
+    }
+
+    validateAcceessToken(token:string) {
+        try {
+            const userData = this.jwtService.verify(token, {
+                secret: process.env.SECRET_KEY
+            })
+            return userData
+        } catch (e) {
+            return null
+        }
+      }
+    
+      validateRefreshToken(refreshToken:string) {
+        try {
+            const userData = this.jwtService.verify<TokenPayload>(refreshToken, {
+                secret: process.env.SECRET_KEY
+            })
+            return userData
+        } catch (e) {
+          return null
+        }
+      }
 }

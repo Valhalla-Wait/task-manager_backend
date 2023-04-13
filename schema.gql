@@ -45,7 +45,13 @@ type Mutation {
 type Query {
   login(loginInput: LoginInput!): LoginUserData!
   logout(logoutInput: LogoutInput!): LogoutData!
+  refresh(refreshInput: RefreshInput!): LoginUserData!
   usersList: [User!]!
+}
+
+input RefreshInput {
+  refreshToken: String!
+  userId: Int!
 }
 
 type RegistratedUser {

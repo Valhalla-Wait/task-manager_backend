@@ -7,6 +7,7 @@ import { MailService } from 'src/mail/mail.service';
 import { TokenService } from 'src/token/token.service';
 import { RegistrationUserInput } from 'src/auth/dto/registration-user.input';
 import { LogoutInput } from './dto/logout.input';
+import { RefreshInput } from './dto/refresh.input';
 
 
 @Injectable()
@@ -22,7 +23,7 @@ export class AuthService {
     if(!isPassEquals) {
       throw new HttpException('Неверный email или пароль', HttpStatus.BAD_REQUEST)
     }
-
+    //////// GENERATE TOKEN FUNC //////////
     //Вынести в отдльеную функцию
     const tokens = this.tokenService.generateTokens({email: candidate.email, isActivated: candidate.isActivated})
 
@@ -39,6 +40,7 @@ export class AuthService {
         isActivated: candidate.isActivated,
       }
     }
+    //////// GENERATE TOKEN FUNC //////////
   }
 
  async logout(userId: number) {
@@ -59,6 +61,7 @@ export class AuthService {
 
     await this.mailService.sendActivationMail(email, `${process.env.API_URL}/auth/activate/${activationLink}`)
 
+    //////// GENERATE TOKEN FUNC //////////
     //Вынести в отдльеную функцию
     const tokens = this.tokenService.generateTokens({email: user.email, isActivated: user.isActivated})
 
@@ -75,6 +78,7 @@ export class AuthService {
         isActivated: user.isActivated,
       }
     }
+    //////// GENERATE TOKEN FUNC //////////
   }
 
   async activate(activationLink:string) {
@@ -84,4 +88,38 @@ export class AuthService {
     }
     return this.userService.activateUserById(user.id)
   }
+
+  async refresh({userId, refreshToken}: RefreshInput) {
+    if(!refreshToken) {
+      throw new HttpException('Unauthorized user', HttpStatus.FORBIDDEN)
+    }
+    const userData = await this.tokenService.validateRefreshToken(refreshToken)
+    const tokenFromDb = await this.tokenService.findTokenByUserId(userId)
+
+    if(!userData || !tokenFromDb) {
+      throw new HttpException('Unauthorized user', HttpStatus.FORBIDDEN)
+    }
+
+    //////// GENERATE TOKEN FUNC //////////
+    //Вынести в отдльеную функцию
+
+    const user = await this.userService.getUserByEmail(userData.email)
+
+    const tokens = this.tokenService.generateTokens({email: user.email, isActivated: user.isActivated})
+
+    await this.tokenService.saveToken({userId: user.id, refreshToken: tokens.refreshToken})
+
+    //Сделать dto чтобы каждый раз не доставать данные по отдельности
+    return {
+      ...tokens,
+      user: {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName:user.lastName,
+        isActivated: user.isActivated,
+      }
+    }
+    //////// GENERATE TOKEN FUNC //////////
+ }
 }

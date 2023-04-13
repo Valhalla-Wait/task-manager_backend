@@ -11,6 +11,7 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 import { Token } from 'src/token/entities/token.entity';
 import { LogoutInput } from './dto/logout.input';
 import { LogoutData } from './entities/logoutData.entity';
+import { RefreshInput } from './dto/refresh.input';
 
 @Resolver()
 export class AuthResolver {
@@ -42,11 +43,20 @@ export class AuthResolver {
       @Args('logoutInput') {userId}: LogoutInput,
       @Context("req") req: Request
     ) {
-      // const {refreshToken} = req.cookies
       const tokenData = await this.authService.logout(userId);
       req.res?.clearCookie('refreshToken')
       return {
         message: "Logout success!"
       }
+    }
+
+  @Query(() => LoginUserData, { name: 'refresh' })
+    async refresh(
+      @Args('refreshInput') refreshInput: RefreshInput,
+      @Context("req") req: Request
+    ) {
+      const userData = await this.authService.refresh(refreshInput);
+      req.res?.cookie("refreshToken", userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
+      return userData
     }
 }
