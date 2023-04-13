@@ -6,6 +6,7 @@ import * as uuid from 'uuid'
 import { MailService } from 'src/mail/mail.service';
 import { TokenService } from 'src/token/token.service';
 import { RegistrationUserInput } from 'src/auth/dto/registration-user.input';
+import { LogoutInput } from './dto/logout.input';
 
 
 @Injectable()
@@ -40,6 +41,11 @@ export class AuthService {
     }
   }
 
+ async logout(userId: number) {
+    const token = await this.tokenService.removeToken(userId)
+    return token
+ }
+
   async registration({email, password, firstName, lastName}: RegistrationUserInput) {
     const candidate = await this.userService.getUserByEmail(email)
 
@@ -70,6 +76,7 @@ export class AuthService {
       }
     }
   }
+
   async activate(activationLink:string) {
     const user = await this.userService.getUserByActivationLink(activationLink)
     if(!user) {

@@ -29,6 +29,14 @@ type LoginUserData {
   user: LoginUser!
 }
 
+type LogoutData {
+  message: String!
+}
+
+input LogoutInput {
+  userId: Int!
+}
+
 type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   registration(registrationUserInput: RegistrationUserInput!): RegistratedUserData!
@@ -36,6 +44,7 @@ type Mutation {
 
 type Query {
   login(loginInput: LoginInput!): LoginUserData!
+  logout(logoutInput: LogoutInput!): LogoutData!
   usersList: [User!]!
 }
 
