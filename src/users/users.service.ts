@@ -31,6 +31,26 @@ export class UsersService {
     });
   }
 
+  async getUserByActivationLink(activationLink:string) {
+    return this.prisma.user.findFirst({
+      where: {
+        activationLink
+      }
+    });
+  }
+
+  async activateUserById(id:number) {
+      const update = await this.prisma.user.update({
+        where:{
+          id
+        },
+        data: {
+          isActivated: true
+        }
+      })
+      return update
+  }
+
   // async getUser(data: LoginInput) {
   //   return ;;
   // }

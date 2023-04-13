@@ -17,4 +17,3 @@ export class RegistratedUserData {
   @Field(() => String)
   refreshToken: string;
 }
-

@@ -8,6 +8,7 @@ import { PrismaModule } from 'src/db/prisma.module';
 import { UsersService } from 'src/users/users.service';
 import { MailService } from 'src/mail/mail.service';
 import { TokenService } from 'src/token/token.service';
+import { AuthController } from './auth.controller';
 
 @Module({
   providers: [AuthResolver, AuthService, UsersService, PrismaService, MailService, TokenService],
@@ -19,5 +20,6 @@ import { TokenService } from 'src/token/token.service';
       }
     }),
   ],
+  controllers: [AuthController],
 })
 export class AuthModule {}

@@ -3,6 +3,7 @@
 # ------------------------------------------------------
 
 input CreateUserInput {
+  activationLink: String!
   email: String!
   firstName: String!
   lastName: String!
@@ -16,7 +17,7 @@ input LoginInput {
 
 type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
-  registration(createUserInput: CreateUserInput!): RegistratedUserData!
+  registration(registrationUserInput: RegistrationUserInput!): RegistratedUserData!
 }
 
 type Query {
@@ -36,6 +37,13 @@ type RegistratedUserData {
   accessToken: String!
   refreshToken: String!
   user: RegistratedUser!
+}
+
+input RegistrationUserInput {
+  email: String!
+  firstName: String!
+  lastName: String!
+  password: String!
 }
 
 type User {

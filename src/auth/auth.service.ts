@@ -1,17 +1,16 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/db/prisma.service';
-import { CreateUserInput } from 'src/users/dto/create-user.input';
 import { UsersService } from 'src/users/users.service';
 import { LoginInput } from './dto/login.input';
 import * as bcrypt from 'bcrypt'
 import * as uuid from 'uuid'
 import { MailService } from 'src/mail/mail.service';
 import { TokenService } from 'src/token/token.service';
+import { RegistrationUserInput } from 'src/users/dto/registration-user.input';
 
 
 @Injectable()
 export class AuthService {
-    constructor(private prisma:PrismaService, private userService: UsersService, private mailService: MailService, private tokenService: TokenService){}
+    constructor(private userService: UsersService, private mailService: MailService, private tokenService: TokenService){}
 
     //Сделать login
   async login({email, password}: LoginInput) {
@@ -20,19 +19,18 @@ export class AuthService {
     else return 'User not found'
   }
 
-  async registration({email, password, firstName, lastName}: CreateUserInput) {
+  async registration({email, password, firstName, lastName}: RegistrationUserInput) {
     const candidate = await this.userService.getUserByEmail(email)
 
     if(candidate) {
-      console.log(candidate)
       throw new HttpException(`Email ${email} уже занят юзером`, HttpStatus.BAD_REQUEST)
     }
     const hashPassword = await bcrypt.hash(password, 3)
     const activationLink = uuid.v4()
 
-    const user = await this.userService.createUser({email, password: hashPassword, firstName, lastName})
+    const user = await this.userService.createUser({email, password: hashPassword, firstName, lastName, activationLink})
 
-    await this.mailService.sendActivationMail(email, activationLink)
+    await this.mailService.sendActivationMail(email, `${process.env.API_URL}/auth/activate/${activationLink}`)
 
     const tokens = this.tokenService.generateTokens({email: user.email, isActivated: user.isActivated})
 
@@ -48,5 +46,12 @@ export class AuthService {
         isActivated: user.isActivated,
       }
     }
+  }
+  async activate(activationLink:string) {
+    const user = await this.userService.getUserByActivationLink(activationLink)
+    if(!user) {
+      throw new Error("Неккоректная ссылка активации");
+    }
+    return this.userService.activateUserById(user.id)
   }
 }
