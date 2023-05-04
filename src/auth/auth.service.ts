@@ -7,7 +7,7 @@ import { MailService } from 'src/mail/mail.service';
 import { TokenService } from 'src/token/token.service';
 import { RegistrationUserInput } from 'src/auth/dto/registration-user.input';
 import { RefreshInput } from './dto/refresh.input';
-import { ApiError } from 'src/exceptions/api.error';
+import { AuthError } from 'src/exceptions/auth.error';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +20,7 @@ export class AuthService {
   async login({ email, password }: LoginInput) {
     const candidate = await this.userService.getUserByEmail(email);
     if (!candidate) {
-      throw ApiError.IncorrectLoginData();
+      throw AuthError.IncorrectLoginData();
     }
     const isPassEquals = await bcrypt.compare(
       password,
@@ -29,7 +29,7 @@ export class AuthService {
       ).password,
     );
     if (!isPassEquals) {
-      throw ApiError.IncorrectLoginData();
+      throw AuthError.IncorrectLoginData();
     }
     //////// GENERATE TOKEN FUNC //////////
     //Вынести в отдльеную функцию
@@ -71,7 +71,7 @@ export class AuthService {
     const candidate = await this.userService.getUserByEmail(email);
 
     if (candidate) {
-      throw ApiError.EmailExists();
+      throw AuthError.EmailExists();
     }
     const hashPassword = await bcrypt.hash(password, 3);
     const activationLink = uuid.v4();
@@ -84,10 +84,10 @@ export class AuthService {
       activationLink,
     });
 
-    await this.mailService.sendActivationMail(
-      email,
-      `${process.env.API_URL}/auth/activate/${activationLink}`,
-    );
+    // await this.mailService.sendActivationMail(
+    //   email,
+    //   `${process.env.API_URL}/auth/activate/${activationLink}`,
+    // );
 
     //////// GENERATE TOKEN FUNC //////////
     //Вынести в отдльеную функцию
@@ -125,13 +125,13 @@ export class AuthService {
 
   async refresh({ userId, refreshToken }: RefreshInput) {
     if (!refreshToken) {
-      throw ApiError.UnauthorizedError();
+      throw AuthError.UnauthorizedError();
     }
     const userData = await this.tokenService.validateRefreshToken(refreshToken);
     const tokenFromDb = await this.tokenService.findTokenByUserId(userId);
 
     if (!userData || !tokenFromDb) {
-      throw ApiError.UnauthorizedError();
+      throw AuthError.UnauthorizedError();
     }
 
     //////// GENERATE TOKEN FUNC //////////

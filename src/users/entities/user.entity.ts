@@ -18,7 +18,7 @@ export class User {
   password: string;
 
   @Field(() => Boolean)
-  isActivated: string;
+  isActivated: boolean;
 
   @Field(() => String)
   activationLink: string;

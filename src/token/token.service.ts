@@ -4,6 +4,7 @@ import { PrismaService } from 'src/db/prisma.service';
 import { SaveTokenInput } from './dto/save-token.input';
 import { GenerateTokenInput } from './dto/generate-token.input copy';
 import { TokenPayload } from './entities/tokenPayload.entity';
+import { CommonError } from 'src/exceptions/common.error';
 
 @Injectable()
 export class TokenService {
@@ -63,7 +64,7 @@ export class TokenService {
       });
       return userData;
     } catch (e) {
-      return null;
+      throw CommonError.ServerError();
     }
   }
 
@@ -74,7 +75,7 @@ export class TokenService {
       });
       return userData;
     } catch (e) {
-      return null;
+      throw CommonError.ServerError();
     }
   }
 }

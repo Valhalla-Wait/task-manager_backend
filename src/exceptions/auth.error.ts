@@ -1,6 +1,7 @@
 import { BadRequestException, UnauthorizedException } from '@nestjs/common';
 
-export class ApiError {
+export class AuthError {
+
   static UnauthorizedError() {
     throw new UnauthorizedException('Пользователь не авторизован');
   }

@@ -2,12 +2,56 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input AddUserGroupInput {
+  assignedBy: String!
+  groupId: Int!
+  userId: Int!
+}
+
+input CreateGroupInput {
+  assignedBy: String!
+  leadId: Int!
+  membersIds: [Int!]
+  name: String!
+  projectId: Int!
+}
+
+input CreateProjectInput {
+  description: String!
+  name: String!
+  ownerId: Int!
+}
+
 input CreateUserInput {
   activationLink: String!
   email: String!
   firstName: String!
   lastName: String!
   password: String!
+}
+
+input DeleteMembersGroupInput {
+  groupId: Int!
+  userId: Int!
+}
+
+input GetProjectsInput {
+  ownerId: Int!
+}
+
+type Group {
+  id: ID!
+  leadId: Int!
+  name: String!
+  projectId: Int!
+}
+
+type GroupData {
+  id: ID!
+  lead: User!
+  members: [User!]!
+  name: String!
+  projectId: Int!
 }
 
 input LoginInput {
@@ -38,13 +82,30 @@ input LogoutInput {
 }
 
 type Mutation {
+  addLeadInGroup(addLeadInGroup: AddUserGroupInput!): GroupData!
+  addMembersInGroup(addMembersGroupInput: AddUserGroupInput!): GroupData!
+  createGroup(createGroupInput: CreateGroupInput!): GroupData!
+  createProject(createProjectInput: CreateProjectInput!): Project!
   createUser(createUserInput: CreateUserInput!): User!
+  deleteMembersInGroup(deleteMembersGroupInput: DeleteMembersGroupInput!): GroupData!
   registration(registrationUserInput: RegistrationUserInput!): RegistratedUserData!
+  renameGroup(renameGroupInput: RenameGroupInput!): Group!
+}
+
+type Project {
+  description: String!
+  id: ID!
+  name: String!
+  ownerId: Int!
 }
 
 type Query {
+  groupById(groupId: Float!): GroupData!
+  groupsByProjectId(projectId: Float!): [GroupData!]!
   login(loginInput: LoginInput!): LoginUserData!
   logout(logoutInput: LogoutInput!): LogoutData!
+  projectsListById(getProjectByIdInput: Float!): Project!
+  projectsListByOwnerId(getProjectsInput: GetProjectsInput!): [Project!]!
   refresh(refreshInput: RefreshInput!): LoginUserData!
   usersList: [User!]!
 }
@@ -73,6 +134,11 @@ input RegistrationUserInput {
   firstName: String!
   lastName: String!
   password: String!
+}
+
+input RenameGroupInput {
+  groupId: Int!
+  name: String!
 }
 
 type User {

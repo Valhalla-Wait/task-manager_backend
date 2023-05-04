@@ -7,6 +7,8 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { MailModule } from './mail/mail.module';
 import { TokenModule } from './token/token.module';
+import { ProjectsModule } from './projects/projects.module';
+import { GroupsModule } from './groups/groups.module';
 
 @Module({
   imports: [
@@ -30,6 +32,8 @@ import { TokenModule } from './token/token.module';
     AuthModule,
     MailModule,
     TokenModule,
+    ProjectsModule,
+    GroupsModule
   ],
 })
 export class AppModule {}
