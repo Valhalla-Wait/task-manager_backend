@@ -3,14 +3,25 @@ import { ProjectsService } from './projects.service';
 import { Project } from './entities/project.entity';
 import { CreateProjectInput } from './dto/create-project.input';
 import { GetProjectsInput } from './dto/get-projects.input';
+import { UpdateProjectInput } from './dto/update-project.input';
 
 @Resolver(() => Project)
 export class ProjectsResolver {
   constructor(private readonly projectsService: ProjectsService) {}
 
   @Mutation(() => Project)
-  createProject(@Args('createProjectInput') createUserInput: CreateProjectInput) {
-    return this.projectsService.createProject(createUserInput);
+  createProject(@Args('createProjectInput') createProjectInput: CreateProjectInput) {
+    return this.projectsService.createProject(createProjectInput);
+  }
+
+  @Mutation(() => Project)
+  deleteProject(@Args('deleteProjectInput') projectId: number) {
+    return this.projectsService.deleteProject(projectId);
+  }
+
+  @Mutation(() => Project)
+  updateProject(@Args('updateProjectInput') updateProjectInput: UpdateProjectInput) {
+    return this.projectsService.updateProject(updateProjectInput);
   }
 
   @Query(() => [Project], { name: 'projectsListByOwnerId' })

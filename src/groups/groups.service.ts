@@ -51,8 +51,6 @@ export class GroupsService {
         })
       }
 
-      console.log(membersData)
-
       return this.prisma.group.create({
         data: {
           name: data.name,
@@ -93,10 +91,7 @@ export class GroupsService {
   async createGroup(data: CreateGroupInput) {
     try {
       const createGroup = await this.makeCreateGroupQuery(data)
-
-      const groupData = await this.getGroupById(createGroup.id)
-
-      return groupData
+      return this.getGroupById(createGroup.id)
     } catch (e) {
       console.log(e)
       throw CommonError.ServerError()
@@ -106,8 +101,7 @@ export class GroupsService {
 
   async renameGroup(data: RenameGroupInput) {
     try {
-
-      const renameGroup = await this.prisma.group.update({
+      return this.prisma.group.update({
         where: {
           id: data.groupId
         },
@@ -115,8 +109,6 @@ export class GroupsService {
           name: data.name
         }
       })
-
-      return renameGroup
     } catch (e) {
       throw CommonError.ServerError()
     }
@@ -130,8 +122,6 @@ export class GroupsService {
           groupId: data.groupId
         }
       });
-
-      console.log(isMember)
 
       if (isMember) {
         throw GroupError.MemberIsAlreadyExists()
@@ -155,9 +145,8 @@ export class GroupsService {
           groupId: data.groupId
         }
       });
-      const groupData = await this.getGroupById(addMember.groupId)
 
-      return groupData
+      return this.getGroupById(addMember.groupId)
   }
 
   async deleteMemberInGroup(data: DeleteMembersGroupInput) {
@@ -170,8 +159,7 @@ export class GroupsService {
           }
         }
       });
-      const groupData = await this.getGroupById(deleteMember.groupId)
-      return groupData
+      return this.getGroupById(deleteMember.groupId)
     } catch (e) {
       throw CommonError.ServerError()
     }
@@ -190,14 +178,14 @@ export class GroupsService {
     const groupMembers = await this.getGroupMembers(groupId)
     const userIsMember = groupMembers.find(member => member.id === userId)
     if (userIsMember) {
-      const deleteUserFromMembers = await this.deleteMemberInGroup({ groupId, userId })
-      const setLead = await this.setLeadInGroup(groupId, userId, groupInfo.leadId, assignedBy)
-      const groupData = await this.getGroupById(groupId)
-      return groupData
+      await this.deleteMemberInGroup({ groupId, userId })
+
+      await this.setLeadInGroup(groupId, userId, groupInfo.leadId, assignedBy)
+
+      return this.getGroupById(groupId)
     }
-    const setLead = await this.setLeadInGroup(groupId, userId, groupInfo.leadId, assignedBy)
-    const groupData = await this.getGroupById(groupId)
-    return groupData
+    await this.setLeadInGroup(groupId, userId, groupInfo.leadId, assignedBy) 
+    return this.getGroupById(groupId)
   }
 
   async getGroupsByProjectId(projectId: number) {

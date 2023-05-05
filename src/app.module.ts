@@ -9,6 +9,9 @@ import { MailModule } from './mail/mail.module';
 import { TokenModule } from './token/token.module';
 import { ProjectsModule } from './projects/projects.module';
 import { GroupsModule } from './groups/groups.module';
+import { TasksModule } from './tasks/tasks.module';
+import { TagsModule } from './tags/tags.module';
+import { StatusesModule } from './statuses/statuses.module';
 
 @Module({
   imports: [
@@ -33,7 +36,10 @@ import { GroupsModule } from './groups/groups.module';
     MailModule,
     TokenModule,
     ProjectsModule,
-    GroupsModule
+    GroupsModule,
+    TasksModule,
+    TagsModule,
+    StatusesModule
   ],
 })
 export class AppModule {}

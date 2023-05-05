@@ -22,6 +22,8 @@ model User {
   projects Project[]
   groups GroupsOnUsers[]
   groupsLeadership Group[]
+  tasks Task[]
+  assignedTasks TasksOnExecutors[]
 }
 
 model Token {
@@ -37,6 +39,8 @@ model Project {
   owner User @relation(fields: [ownerId], references: [id])
   ownerId Int
   groups Group[]
+  tasks Task[]
+  tags Tag[]
 }
 
 model Group {
@@ -47,6 +51,7 @@ model Group {
   project Project @relation(fields: [projectId], references: [id])
   projectId Int
   members GroupsOnUsers[]
+  tasks Task[]
 }
 
 model GroupsOnUsers {
@@ -58,6 +63,66 @@ model GroupsOnUsers {
   assignedBy String
 
   @@id([userId, groupId])
+}
+
+model Tag {
+  id Int @id @default(autoincrement())
+  name String
+  color String
+  tasks TasksOnTags[]
+  project Project @relation(fields: [projectId], references: [id])
+  projectId Int
+}
+
+model Status {
+  id Int @id @default(autoincrement())
+  name String
+  tasks Task[]
+}
+
+model TasksOnTags {
+  task Task @relation(fields: [taskId], references: [id])
+  taskId Int
+  tag Tag @relation(fields: [tagId], references: [id])
+  tagId Int
+
+  @@id([taskId, tagId])
+}
+
+// model TasksOnStatuses {
+//   task Task @relation(fields: [taskId], references: [id])
+//   taskId Int
+//   status Status @relation(fields: [statusId], references: [id])
+//   statusId Int
+
+//    @@id([taskId, statusId])
+// }
+
+ model TasksOnExecutors {
+  task Task @relation(fields: [taskId], references: [id])
+  taskId Int
+  executor User @relation(fields: [executorId], references: [id])
+  executorId Int
+
+   @@id([taskId, executorId])
+}
+
+model Task {
+  id Int @id @default(autoincrement())
+  name String
+  description String
+  author User @relation(fields: [authorId], references: [id])
+  authorId Int
+  executors TasksOnExecutors[]
+  tags TasksOnTags[]
+  createdAt DateTime @default(now())
+  deadline DateTime
+  status Status @relation(fields: [statusId], references: [id])
+  statusId Int
+  project Project @relation(fields: [projectId], references: [id])
+  projectId Int
+  group Group @relation(fields: [groupId], references: [id])
+  groupId Int
 }
 
 

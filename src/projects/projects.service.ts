@@ -3,6 +3,7 @@ import { PrismaService } from 'src/db/prisma.service';
 import { ProjectError } from 'src/exceptions/project.error';
 import { CreateProjectInput } from './dto/create-project.input';
 import { GetProjectsInput } from './dto/get-projects.input';
+import { UpdateProjectInput } from './dto/update-project.input';
 
 @Injectable()
 export class ProjectsService {
@@ -32,15 +33,24 @@ export class ProjectsService {
     return project
   }
 
-  // async getUser(data: LoginInput) {
-  //   return ;;
-  // }
+ async deleteProject(projectId:number) {
+    return this.prisma.project.delete({
+      where:{
+        id: projectId
+      }
+    })
+ }
 
-  // async updateUser(id: number, updateUserInput: UpdateUserInput) {
-  //   return `This action updates a #${id} user`;
-  // }
+ async updateProject({id, name, description}: UpdateProjectInput) {
+  return this.prisma.project.update({
+    where:{
+      id
+    },
+    data:{
+      name,
+      description
+    }
+  })
+ }
 
-  // async deleteUser(id: number) {
-  //   return `This action removes a #${id} user`;
-  // }
 }

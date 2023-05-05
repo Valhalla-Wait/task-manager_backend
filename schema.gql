@@ -22,6 +22,21 @@ input CreateProjectInput {
   ownerId: Int!
 }
 
+input CreateStatusInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input CreateTagInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input CreateTaskInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
 input CreateUserInput {
   activationLink: String!
   email: String!
@@ -86,10 +101,21 @@ type Mutation {
   addMembersInGroup(addMembersGroupInput: AddUserGroupInput!): GroupData!
   createGroup(createGroupInput: CreateGroupInput!): GroupData!
   createProject(createProjectInput: CreateProjectInput!): Project!
+  createStatus(createStatusInput: CreateStatusInput!): Status!
+  createTag(createTagInput: CreateTagInput!): Tag!
+  createTask(createTaskInput: CreateTaskInput!): Task!
   createUser(createUserInput: CreateUserInput!): User!
   deleteMembersInGroup(deleteMembersGroupInput: DeleteMembersGroupInput!): GroupData!
+  deleteProject(deleteProjectInput: Float!): Project!
   registration(registrationUserInput: RegistrationUserInput!): RegistratedUserData!
+  removeStatus(id: Int!): Status!
+  removeTag(id: Int!): Tag!
+  removeTask(id: Int!): Task!
   renameGroup(renameGroupInput: RenameGroupInput!): Group!
+  updateProject(updateProjectInput: UpdateProjectInput!): Project!
+  updateStatus(updateStatusInput: UpdateStatusInput!): Status!
+  updateTag(updateTagInput: UpdateTagInput!): Tag!
+  updateTask(updateTaskInput: UpdateTaskInput!): Task!
 }
 
 type Project {
@@ -107,6 +133,12 @@ type Query {
   projectsListById(getProjectByIdInput: Float!): Project!
   projectsListByOwnerId(getProjectsInput: GetProjectsInput!): [Project!]!
   refresh(refreshInput: RefreshInput!): LoginUserData!
+  status(id: Int!): Status!
+  statuses: [Status!]!
+  tag(id: Int!): Tag!
+  tags: [Tag!]!
+  task(id: Int!): Task!
+  tasks: [Task!]!
   usersList: [User!]!
 }
 
@@ -139,6 +171,45 @@ input RegistrationUserInput {
 input RenameGroupInput {
   groupId: Int!
   name: String!
+}
+
+type Status {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Tag {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Task {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateProjectInput {
+  description: String
+  id: Int!
+  name: String
+}
+
+input UpdateStatusInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input UpdateTagInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input UpdateTaskInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }
 
 type User {
