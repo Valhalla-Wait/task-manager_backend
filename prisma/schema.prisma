@@ -36,11 +36,10 @@ model Project {
   id Int @id @default(autoincrement())
   name String
   description String
-  owner User @relation(fields: [ownerId], references: [id])
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   ownerId Int
   groups Group[]
   tasks Task[]
-  tags Tag[]
 }
 
 model Group {
@@ -48,16 +47,16 @@ model Group {
   name String
   lead User @relation(fields: [leadId], references: [id])
   leadId Int
-  project Project @relation(fields: [projectId], references: [id])
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   projectId Int
   members GroupsOnUsers[]
   tasks Task[]
 }
 
 model GroupsOnUsers {
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId Int
-  group Group @relation(fields: [groupId], references: [id])
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   groupId Int
   assignedAt DateTime @default(now())
   assignedBy String
@@ -69,9 +68,8 @@ model Tag {
   id Int @id @default(autoincrement())
   name String
   color String
-  tasks TasksOnTags[]
-  project Project @relation(fields: [projectId], references: [id])
-  projectId Int
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  taskId Int
 }
 
 model Status {
@@ -80,14 +78,14 @@ model Status {
   tasks Task[]
 }
 
-model TasksOnTags {
-  task Task @relation(fields: [taskId], references: [id])
-  taskId Int
-  tag Tag @relation(fields: [tagId], references: [id])
-  tagId Int
+// model TasksOnTags {
+//   task Task @relation(fields: [taskId], references: [id])
+//   taskId Int
+//   tag Tag @relation(fields: [tagId], references: [id])
+//   tagId Int
 
-  @@id([taskId, tagId])
-}
+//   @@id([taskId, tagId])
+// }
 
 // model TasksOnStatuses {
 //   task Task @relation(fields: [taskId], references: [id])
@@ -99,9 +97,9 @@ model TasksOnTags {
 // }
 
  model TasksOnExecutors {
-  task Task @relation(fields: [taskId], references: [id])
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   taskId Int
-  executor User @relation(fields: [executorId], references: [id])
+  executor User @relation(fields: [executorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   executorId Int
 
    @@id([taskId, executorId])
@@ -114,14 +112,14 @@ model Task {
   author User @relation(fields: [authorId], references: [id])
   authorId Int
   executors TasksOnExecutors[]
-  tags TasksOnTags[]
+  tags Tag[]
   createdAt DateTime @default(now())
   deadline DateTime
   status Status @relation(fields: [statusId], references: [id])
-  statusId Int
-  project Project @relation(fields: [projectId], references: [id])
+  statusId Int @default(1)
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   projectId Int
-  group Group @relation(fields: [groupId], references: [id])
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   groupId Int
 }
 

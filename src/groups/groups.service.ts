@@ -93,7 +93,6 @@ export class GroupsService {
       const createGroup = await this.makeCreateGroupQuery(data)
       return this.getGroupById(createGroup.id)
     } catch (e) {
-      console.log(e)
       throw CommonError.ServerError()
     }
 

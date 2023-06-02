@@ -3,8 +3,11 @@ import { StatusesService } from './statuses.service';
 import { Status } from './entities/status.entity';
 import { CreateStatusInput } from './dto/create-status.input';
 import { UpdateStatusInput } from './dto/update-status.input';
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Resolver(() => Status)
+@UseGuards(AuthGuard)
 export class StatusesResolver {
   constructor(private readonly statusesService: StatusesService) {}
 

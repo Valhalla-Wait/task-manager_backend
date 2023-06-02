@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/db/prisma.service';
 import { CreateStatusInput } from './dto/create-status.input';
 import { UpdateStatusInput } from './dto/update-status.input';
 
 @Injectable()
 export class StatusesService {
+
   create(createStatusInput: CreateStatusInput) {
     return 'This action adds a new status';
   }

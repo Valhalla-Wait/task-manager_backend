@@ -4,8 +4,11 @@ import { Project } from './entities/project.entity';
 import { CreateProjectInput } from './dto/create-project.input';
 import { GetProjectsInput } from './dto/get-projects.input';
 import { UpdateProjectInput } from './dto/update-project.input';
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Resolver(() => Project)
+@UseGuards(AuthGuard)
 export class ProjectsResolver {
   constructor(private readonly projectsService: ProjectsService) {}
 

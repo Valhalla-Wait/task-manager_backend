@@ -28,13 +28,20 @@ input CreateStatusInput {
 }
 
 input CreateTagInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  color: String!
+  name: String!
+  taskId: Int!
 }
 
 input CreateTaskInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  authorId: Int!
+  deadline: DateTime!
+  description: String!
+  executorIds: [Int!]!
+  groupId: Int!
+  name: String!
+  projectId: Int!
+  tagIds: [Int!]!
 }
 
 input CreateUserInput {
@@ -44,6 +51,11 @@ input CreateUserInput {
   lastName: String!
   password: String!
 }
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 input DeleteMembersGroupInput {
   groupId: Int!
@@ -102,20 +114,20 @@ type Mutation {
   createGroup(createGroupInput: CreateGroupInput!): GroupData!
   createProject(createProjectInput: CreateProjectInput!): Project!
   createStatus(createStatusInput: CreateStatusInput!): Status!
-  createTag(createTagInput: CreateTagInput!): Tag!
-  createTask(createTaskInput: CreateTaskInput!): Task!
+  createTag(createTagInput: CreateTagInput!): TaskData!
+  createTask(createTaskInput: CreateTaskInput!): TaskData!
   createUser(createUserInput: CreateUserInput!): User!
   deleteMembersInGroup(deleteMembersGroupInput: DeleteMembersGroupInput!): GroupData!
   deleteProject(deleteProjectInput: Float!): Project!
+  deleteTask(id: Int!): TaskData!
   registration(registrationUserInput: RegistrationUserInput!): RegistratedUserData!
   removeStatus(id: Int!): Status!
-  removeTag(id: Int!): Tag!
-  removeTask(id: Int!): Task!
+  removeTag(id: Int!): TaskData!
   renameGroup(renameGroupInput: RenameGroupInput!): Group!
   updateProject(updateProjectInput: UpdateProjectInput!): Project!
   updateStatus(updateStatusInput: UpdateStatusInput!): Status!
-  updateTag(updateTagInput: UpdateTagInput!): Tag!
-  updateTask(updateTaskInput: UpdateTaskInput!): Task!
+  updateTag(updateTagInput: UpdateTagInput!): TaskData!
+  updateTask(updateTaskInput: UpdateTaskInput!): TaskData!
 }
 
 type Project {
@@ -126,6 +138,7 @@ type Project {
 }
 
 type Query {
+  getTagsByTaskId(taskId: Int!): [Tag!]!
   groupById(groupId: Float!): GroupData!
   groupsByProjectId(projectId: Float!): [GroupData!]!
   login(loginInput: LoginInput!): LoginUserData!
@@ -136,9 +149,8 @@ type Query {
   status(id: Int!): Status!
   statuses: [Status!]!
   tag(id: Int!): Tag!
-  tags: [Tag!]!
-  task(id: Int!): Task!
-  tasks: [Task!]!
+  taskById(id: Int!): TaskData!
+  tasksByProjectId(projectId: Int!): [TaskData!]!
   usersList: [User!]!
 }
 
@@ -179,13 +191,30 @@ type Status {
 }
 
 type Tag {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  color: String!
+  id: ID!
+  name: String!
+  taskId: Int!
 }
 
-type Task {
-  """Example field (placeholder)"""
-  exampleField: Int!
+type TaskData {
+  authorId: Int!
+  createdAt: DateTime!
+  deadline: DateTime!
+  description: String!
+  executors: [User!]!
+  groupId: Int!
+  id: ID!
+  name: String!
+  projectId: Int!
+  statusId: Int!
+  tags: [TaskTag!]!
+}
+
+type TaskTag {
+  color: String!
+  id: Int!
+  name: String!
 }
 
 input UpdateProjectInput {
@@ -201,15 +230,22 @@ input UpdateStatusInput {
 }
 
 input UpdateTagInput {
-  """Example field (placeholder)"""
-  exampleField: Int
+  color: String
   id: Int!
+  name: String
+  taskId: Int
 }
 
 input UpdateTaskInput {
-  """Example field (placeholder)"""
-  exampleField: Int
+  authorId: Int
+  deadline: DateTime
+  description: String
+  executorIds: [Int!]
+  groupId: Int
   id: Int!
+  name: String
+  projectId: Int
+  tagIds: [Int!]
 }
 
 type User {

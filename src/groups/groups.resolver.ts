@@ -1,4 +1,6 @@
+import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { AuthGuard } from 'src/auth/auth.guard';
 import { AddUserGroupInput } from './dto/add-user-group.input';
 import { CreateGroupInput } from './dto/create-group.input';
 import { DeleteMembersGroupInput } from './dto/delete-members-group.input';
@@ -8,6 +10,7 @@ import { GroupData } from './entities/groupData.entity';
 import { GroupsService } from './groups.service';
 
 @Resolver(() => Group)
+@UseGuards(AuthGuard)
 export class GroupsResolver {
   constructor(private readonly groupsService: GroupsService) {}
 
