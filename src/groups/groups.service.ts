@@ -5,7 +5,7 @@ import { CommonError } from 'src/exceptions/common.error';
 import { GroupError } from 'src/exceptions/group.error';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
-import { prepareGroupResponse } from 'src/utils/prepareGroupResponse';
+// import { prepareGroupResponse } from 'src/utils/prepareGroupResponse';
 import { AddUserGroupInput } from './dto/add-user-group.input';
 import { CreateGroupInput } from './dto/create-group.input';
 import { DeleteMembersGroupInput } from './dto/delete-members-group.input';
@@ -18,6 +18,16 @@ export class GroupsService {
 
   private async getGroupLeadById(leadId: number) {
     return this.usersService.getUserById(leadId)
+  }
+
+  private makeGroupResponse(groupInfo: Group, groupLead: User, groupMembers: User[]): GroupData {
+    return {
+      id: groupInfo.id,
+      projectId: groupInfo.projectId,
+      name: groupInfo.name,
+      lead: groupLead,
+      members: groupMembers
+    }
   }
 
   private async getGroupMembers(groupId: number) {
@@ -220,7 +230,7 @@ export class GroupsService {
       }
       const groupLead = await this.getGroupLeadById(groupInfo.leadId)
       const groupMembers = await this.getGroupMembers(groupInfo.id)
-      const groupData = prepareGroupResponse(groupInfo, groupLead, groupMembers)
+      const groupData = this.makeGroupResponse(groupInfo, groupLead, groupMembers)
 
       return groupData
   }

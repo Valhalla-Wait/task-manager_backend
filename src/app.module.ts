@@ -12,6 +12,7 @@ import { GroupsModule } from './groups/groups.module';
 import { TasksModule } from './tasks/tasks.module';
 import { TagsModule } from './tags/tags.module';
 import { StatusesModule } from './statuses/statuses.module';
+import { ProjectAnaliticsModule } from './project-analytics/project-analitics.module';
 
 @Module({
   imports: [
@@ -39,7 +40,10 @@ import { StatusesModule } from './statuses/statuses.module';
     GroupsModule,
     TasksModule,
     TagsModule,
-    StatusesModule
+    StatusesModule,
+    // AdminModule,
+    ProjectAnaliticsModule
   ],
+  // providers: [AdminResolver],
 })
 export class AppModule {}

@@ -7,7 +7,7 @@ import { UpdateStatusInput } from './dto/update-status.input';
 export class StatusesService {
 
   create(createStatusInput: CreateStatusInput) {
-    return 'This action adds a new status';
+    return 'This action adds a new Status';
   }
 
   findAll() {

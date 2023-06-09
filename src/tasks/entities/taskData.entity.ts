@@ -1,5 +1,6 @@
 import { ObjectType, Field, Int, GraphQLISODateTime, ID } from '@nestjs/graphql';
 import { OmitType, PickType } from '@nestjs/swagger';
+import { Status } from 'src/statuses/entities/status.entity';
 import { Tag } from 'src/tags/entities/tag.entity';
 import { User } from 'src/users/entities/user.entity';
 
@@ -19,6 +20,11 @@ export class TaskData {
 
   @Field(() => Int)
   statusId: number;
+
+  @Field(() => Status)
+  status:{
+    name: string
+  };
 
   @Field(() => GraphQLISODateTime)
   createdAt: string;

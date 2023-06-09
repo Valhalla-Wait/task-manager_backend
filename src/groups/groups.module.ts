@@ -8,6 +8,6 @@ import { GroupsService } from './groups.service';
 @Module({
   providers: [GroupsResolver, GroupsService, PrismaService, UsersService],
   imports:[AuthModule],
-  exports: [GroupsService],
+  exports: [GroupsService, UsersService],
 })
 export class GroupsModule {}

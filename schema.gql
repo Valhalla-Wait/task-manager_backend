@@ -143,6 +143,11 @@ type Query {
   groupsByProjectId(projectId: Float!): [GroupData!]!
   login(loginInput: LoginInput!): LoginUserData!
   logout(logoutInput: LogoutInput!): LogoutData!
+  projectAnalitics(projectId: Int!): [TasksAnalyticByStatus!]!
+  projectAnaliticsByGroupId(getGroupAnalyticByIdInput: getGroupAnalyticInput!): TasksAnalyticByGroups!
+  projectAnaliticsByGroups(projectId: Int!): [TasksAnalyticByGroups!]!
+  projectAnaliticsByUsers(projectId: Int!): [TasksAnalyticByUsers!]!
+  projectAnaliticsGroupByUsers(getGroupAnalyticByIdInput: getGroupAnalyticInput!): [TasksAnalyticByUsers!]!
   projectsListById(getProjectByIdInput: Float!): Project!
   projectsListByOwnerId(getProjectsInput: GetProjectsInput!): [Project!]!
   refresh(refreshInput: RefreshInput!): LoginUserData!
@@ -186,8 +191,8 @@ input RenameGroupInput {
 }
 
 type Status {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  id: ID!
+  name: String!
 }
 
 type Tag {
@@ -207,6 +212,7 @@ type TaskData {
   id: ID!
   name: String!
   projectId: Int!
+  status: Status!
   statusId: Int!
   tags: [TaskTag!]!
 }
@@ -215,6 +221,25 @@ type TaskTag {
   color: String!
   id: Int!
   name: String!
+}
+
+type TasksAnalyticByGroups {
+  analytic: [TasksAnalyticByStatus!]!
+  id: Int!
+  name: String!
+}
+
+type TasksAnalyticByStatus {
+  percent: String!
+  tasksCount: Int!
+  tasksStatus: String!
+}
+
+type TasksAnalyticByUsers {
+  analytic: [TasksAnalyticByStatus!]!
+  firstName: String!
+  id: Int!
+  lastName: String!
 }
 
 input UpdateProjectInput {
@@ -245,6 +270,7 @@ input UpdateTaskInput {
   id: Int!
   name: String
   projectId: Int
+  statusId: Int!
   tagIds: [Int!]
 }
 
@@ -256,4 +282,9 @@ type User {
   isActivated: Boolean!
   lastName: String!
   password: String!
+}
+
+input getGroupAnalyticInput {
+  groupId: Int!
+  projectId: Int!
 }
