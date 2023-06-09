@@ -10,7 +10,7 @@ import { TasksAnalyticByUsers } from './entities/tasksAnalyticByUsers.entity';
 
 
 @Injectable()
-export class ProjectAnaliticsService {
+export class ProjectAnalyticsService {
 
   constructor(private prisma: PrismaService, private groupsService: GroupsService) { }
 

@@ -12,7 +12,7 @@ import { GroupsModule } from './groups/groups.module';
 import { TasksModule } from './tasks/tasks.module';
 import { TagsModule } from './tags/tags.module';
 import { StatusesModule } from './statuses/statuses.module';
-import { ProjectAnaliticsModule } from './project-analytics/project-analitics.module';
+import { ProjectAnalyticsModule } from './project-analytics/project-analytics.module';
 
 @Module({
   imports: [
@@ -42,7 +42,7 @@ import { ProjectAnaliticsModule } from './project-analytics/project-analitics.mo
     TagsModule,
     StatusesModule,
     // AdminModule,
-    ProjectAnaliticsModule
+    ProjectAnalyticsModule
   ],
   // providers: [AdminResolver],
 })

@@ -1,5 +1,5 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { ProjectAnaliticsService } from './project-analitics.service';
+import { ProjectAnalyticsService } from './project-analytics.service';
 import { TasksAnalyticByStatus } from './entities/tasksAnalyticByStatus.entity';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { UseGuards } from '@nestjs/common';
@@ -9,31 +9,31 @@ import { TasksAnalyticByUsers } from './entities/tasksAnalyticByUsers.entity';
 
 @Resolver(() => TasksAnalyticByStatus)
 @UseGuards(AuthGuard)
-export class ProjectAnaliticsResolver {
-  constructor(private readonly projectAnaliticsService: ProjectAnaliticsService) {}
+export class ProjectAnalyticsResolver {
+  constructor(private readonly projectAnalyticsService: ProjectAnalyticsService) {}
 
-  @Query(() => [TasksAnalyticByStatus], { name: 'projectAnalitics' })
+  @Query(() => [TasksAnalyticByStatus], { name: 'projectAnalytics' })
   findByProject(@Args('projectId', { type: () => Int }) projectId: number) {
-    return this.projectAnaliticsService.getAnalytic(projectId);
+    return this.projectAnalyticsService.getAnalytic(projectId);
   }
 
-  @Query(() => [TasksAnalyticByGroups], { name: 'projectAnaliticsByGroups' })
+  @Query(() => [TasksAnalyticByGroups], { name: 'projectAnalyticsByGroups' })
   findByGroups(@Args('projectId', { type: () => Int }) projectId: number) {
-    return this.projectAnaliticsService.getAnalyticbyGroups(projectId);
+    return this.projectAnalyticsService.getAnalyticbyGroups(projectId);
   }
 
-  @Query(() => TasksAnalyticByGroups, { name: 'projectAnaliticsByGroupId' })
+  @Query(() => TasksAnalyticByGroups, { name: 'projectAnalyticsByGroupId' })
   findByGroupId(@Args('getGroupAnalyticByIdInput') {projectId, groupId}: getGroupAnalyticInput) {
-    return this.projectAnaliticsService.getAnalyticbyGroupId(projectId, groupId);
+    return this.projectAnalyticsService.getAnalyticbyGroupId(projectId, groupId);
   }
 
-  @Query(() => [TasksAnalyticByUsers], { name: 'projectAnaliticsByUsers' })
+  @Query(() => [TasksAnalyticByUsers], { name: 'projectAnalyticsByUsers' })
   findByUsers(@Args('projectId', { type: () => Int }) projectId: number) {
-    return this.projectAnaliticsService.getAnalyticByUsers(projectId);
+    return this.projectAnalyticsService.getAnalyticByUsers(projectId);
   }
 
-  @Query(() => [TasksAnalyticByUsers], { name: 'projectAnaliticsGroupByUsers' })
+  @Query(() => [TasksAnalyticByUsers], { name: 'projectAnalyticsGroupByUsers' })
   findByGroupUsers(@Args('getGroupAnalyticByIdInput') {projectId, groupId}: getGroupAnalyticInput) {
-    return this.projectAnaliticsService.getAnalyticGroupByUsers(projectId, groupId);
+    return this.projectAnalyticsService.getAnalyticGroupByUsers(projectId, groupId);
   }
 }
