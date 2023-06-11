@@ -143,11 +143,11 @@ type Query {
   groupsByProjectId(projectId: Float!): [GroupData!]!
   login(loginInput: LoginInput!): LoginUserData!
   logout(logoutInput: LogoutInput!): LogoutData!
-  projectAnalitics(projectId: Int!): [TasksAnalyticByStatus!]!
-  projectAnaliticsByGroupId(getGroupAnalyticByIdInput: getGroupAnalyticInput!): TasksAnalyticByGroups!
-  projectAnaliticsByGroups(projectId: Int!): [TasksAnalyticByGroups!]!
-  projectAnaliticsByUsers(projectId: Int!): [TasksAnalyticByUsers!]!
-  projectAnaliticsGroupByUsers(getGroupAnalyticByIdInput: getGroupAnalyticInput!): [TasksAnalyticByUsers!]!
+  projectAnalytics(projectId: Int!): [TasksAnalyticByStatus!]!
+  projectAnalyticsByGroupId(getGroupAnalyticByIdInput: getGroupAnalyticInput!): TasksAnalyticByGroups!
+  projectAnalyticsByGroups(projectId: Int!): [TasksAnalyticByGroups!]!
+  projectAnalyticsByUsers(projectId: Int!): [TasksAnalyticByUsers!]!
+  projectAnalyticsGroupByUsers(getGroupAnalyticByIdInput: getGroupAnalyticInput!): [TasksAnalyticByUsers!]!
   projectsListById(getProjectByIdInput: Float!): Project!
   projectsListByOwnerId(getProjectsInput: GetProjectsInput!): [Project!]!
   refresh(refreshInput: RefreshInput!): LoginUserData!

@@ -4,7 +4,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const PORT = process.env.PORT;
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {cors:true});
 
   //ДОбавить схемы графа
   const config = new DocumentBuilder()
