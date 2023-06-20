@@ -1,9 +1,11 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, GqlContextType, GraphQLExecutionContext } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { CreateUserInput } from './dto/create-user.input';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { IncomingMessage } from 'http';
+
 
 @Resolver(() => User)
 @UseGuards(AuthGuard)
@@ -20,18 +22,20 @@ export class UsersResolver {
     return this.usersService.getUsers();
   }
 
-  // @Query(() => User, { name: 'user' })
-  // findOne(@Args('id', { type: () => Int }) id: number) {
-  //   return this.usersService.findOne(id);
-  // }
+  @Query(() => User, { name: 'getCurrentUser' })
+  findOne(obj, args, {req}:{req:ContextType}) {
+    return this.usersService.getUserByEmail(req.user.email);
+  }
 
-  // @Mutation(() => User)
-  // updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
-  //   return this.usersService.update(updateUserInput.id, updateUserInput);
-  // }
+  @Mutation(() => [User], { name: 'searchUsers' })
+  search(@Args('searchInput') searchString: string) {
+    return this.usersService.searchUsers(searchString);
+  }
+}
 
-  // @Mutation(() => User)
-  // removeUser(@Args('id', { type: () => Int }) id: number) {
-  //   return this.usersService.remove(id);
-  // }
+type ContextType = IncomingMessage & {
+  user:{
+    email: string,
+    isActivated: boolean,
+  }
 }

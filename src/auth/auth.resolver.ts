@@ -27,7 +27,7 @@ export class AuthResolver {
     return userData;
   }
 
-  @Query(() => LoginUserData, { name: 'login' })
+  @Mutation(() => LoginUserData, { name: 'login' })
   async login(
     @Args('loginInput') loginInput: LoginInput,
     @Context('res') res: Response,

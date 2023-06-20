@@ -13,6 +13,7 @@ import { TasksModule } from './tasks/tasks.module';
 import { TagsModule } from './tags/tags.module';
 import { StatusesModule } from './statuses/statuses.module';
 import { ProjectAnalyticsModule } from './project-analytics/project-analytics.module';
+import { GraphQLError, GraphQLFormattedError } from 'graphql';
 
 @Module({
   imports: [
@@ -28,6 +29,12 @@ import { ProjectAnalyticsModule } from './project-analytics/project-analytics.mo
       autoSchemaFile: 'schema.gql',
       sortSchema: true,
       playground: true,
+      formatError: (error: GraphQLError) => {
+        const graphQLFormattedError:GraphQLFormattedError = {
+         message: error.message
+        };
+        return graphQLFormattedError;
+      },
     }),
     ConfigModule.forRoot({
       envFilePath: `.${process.env.NODE_ENV}.env`,

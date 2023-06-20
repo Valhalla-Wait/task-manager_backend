@@ -120,10 +120,12 @@ type Mutation {
   deleteMembersInGroup(deleteMembersGroupInput: DeleteMembersGroupInput!): GroupData!
   deleteProject(deleteProjectInput: Float!): Project!
   deleteTask(id: Int!): TaskData!
+  login(loginInput: LoginInput!): LoginUserData!
   registration(registrationUserInput: RegistrationUserInput!): RegistratedUserData!
   removeStatus(id: Int!): Status!
   removeTag(id: Int!): TaskData!
   renameGroup(renameGroupInput: RenameGroupInput!): Group!
+  searchUsers(searchInput: String!): [User!]!
   updateProject(updateProjectInput: UpdateProjectInput!): Project!
   updateStatus(updateStatusInput: UpdateStatusInput!): Status!
   updateTag(updateTagInput: UpdateTagInput!): TaskData!
@@ -138,10 +140,10 @@ type Project {
 }
 
 type Query {
+  getCurrentUser: User!
   getTagsByTaskId(taskId: Int!): [Tag!]!
   groupById(groupId: Float!): GroupData!
   groupsByProjectId(projectId: Float!): [GroupData!]!
-  login(loginInput: LoginInput!): LoginUserData!
   logout(logoutInput: LogoutInput!): LogoutData!
   projectAnalytics(projectId: Int!): [TasksAnalyticByStatus!]!
   projectAnalyticsByGroupId(getGroupAnalyticByIdInput: getGroupAnalyticInput!): TasksAnalyticByGroups!

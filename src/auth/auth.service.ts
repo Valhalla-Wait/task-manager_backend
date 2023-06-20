@@ -91,6 +91,7 @@ export class AuthService {
 
     //////// GENERATE TOKEN FUNC //////////
     //Вынести в отдльеную функцию
+    console.log(candidate)
     const tokens = this.tokenService.generateTokens({
       email: user.email,
       isActivated: user.isActivated,
