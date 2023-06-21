@@ -1,0 +1,8 @@
+.git
+node_modules
+.eslint*
+.prettier*
+.gitignore
+Dockerfile
+.dockerignore
+docker-compose.yml
