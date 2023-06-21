@@ -62,7 +62,6 @@ export class UsersService {
 
   async getUserByToken(token: string) {
     const verifyToken = this.tokenService.validateAcceessToken(token)
-    console.log(verifyToken)
     return 22
     // return this.prisma.user.findFirst({
     //   where: {
