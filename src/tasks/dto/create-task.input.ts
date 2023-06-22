@@ -19,7 +19,7 @@ export class CreateTaskInput {
   projectId: number;
 
   @Field(() => Int, {nullable: true})
-  groupId: number;
+  groupIds: number[];
 
   @Field(() => [Int], {nullable: true})
   tagIds: number[];

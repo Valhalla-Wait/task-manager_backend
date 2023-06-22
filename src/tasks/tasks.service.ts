@@ -42,10 +42,11 @@ export class TasksService {
     }))
   }
 
-  async create({ executorIds, tagIds, ...data }: CreateTaskInput) {
+  async create({ executorIds, tagIds, groupIds, ...data }: CreateTaskInput) {
     try {
       const executorsData = []
       const tagsData = []
+      const groupsData = []
 
       if (executorIds.length) {
         for (let i = 0; i < executorIds.length; i++) {
@@ -70,10 +71,24 @@ export class TasksService {
           })
         }
       }
+      if (groupIds.length) {
+        for (let i = 0; i < groupIds.length; i++) {
+          groupsData.push({
+            group: {
+              connect: {
+                id: groupIds[i]
+              }
+            }
+          })
+        }
+      }
 
       const createdTask = await this.prisma.task.create({
         data: {
           ...data,
+          groups:{
+            create: groupsData
+          },
           executors: {
             create: executorsData
           },
