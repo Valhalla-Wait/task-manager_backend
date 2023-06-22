@@ -20,7 +20,7 @@ export class AuthService {
   async login({ email, password }: LoginInput) {
     const candidate = await this.userService.getUserByEmail(email);
     if (!candidate) {
-      throw AuthError.IncorrectLoginData();
+      return AuthError.IncorrectLoginData();
     }
     const isPassEquals = await bcrypt.compare(
       password,

@@ -33,10 +33,10 @@ export class AuthResolver {
     @Context('res') res: Response,
   ) {
     const userData = await this.authService.login(loginInput);
-    res?.cookie('refreshToken', userData.refreshToken, {
-      maxAge: 30 * 24 * 60 * 60 * 1000,
-      httpOnly: true,
-    });
+    // res?.cookie('refreshToken', userData.refreshToken, {
+    //   maxAge: 30 * 24 * 60 * 60 * 1000,
+    //   httpOnly: true,
+    // });
     return userData;
   }
 

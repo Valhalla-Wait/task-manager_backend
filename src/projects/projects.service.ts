@@ -21,11 +21,61 @@ export class ProjectsService {
     });
   }
 
+  async addMemberInProject({projectId, memberId}: {projectId:number, memberId:number}) {
+    return this.prisma.projectsOnUsers.create({
+      data:{
+        project:{
+          connect:{
+            id: projectId
+          }
+        },
+        user:{
+          connect:{
+            id: memberId
+          }
+        },
+        userId: memberId,
+        projectId: projectId
+      },
+    });
+  }
+
   async getProjectById(projectId: number) {
     const project = await this.prisma.project.findFirst({
       where: {
         id: projectId,
       },
+      include:{
+        members:{
+          include:{
+            user:{
+              select:{
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+              }
+            }
+          }
+        },
+        tasks:{
+          select:{
+            id: true,
+            name: true,
+            description: true,
+            deadline: true,
+            executors: true,
+          },
+          include:{
+            status:{
+              select:{
+                id: true,
+                name: true
+              }
+            }
+          }
+        },
+      }
     });
     if(!project) {
       throw ProjectError.ProjectNotFound()
