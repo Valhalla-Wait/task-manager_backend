@@ -44,7 +44,7 @@ export class ProjectsService {
     const projectUsers = await this.prisma.user.findMany({
       where: {
         projects: {
-          every: {
+          some:{
             projectId
           }
         }
