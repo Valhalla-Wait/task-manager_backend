@@ -72,7 +72,7 @@ export class LightTaskData {
   @Field(() => Int)
   authorId: number;
 
-  @Field(() => Status)
+  @Field(() => String)
   status:string;
 
   @Field(() => GraphQLISODateTime)

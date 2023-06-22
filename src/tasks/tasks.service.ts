@@ -3,7 +3,7 @@ import { LightTask, LightTasksOnExecutors, Prisma, Task, TasksOnExecutors, User 
 import { PrismaService } from 'src/db/prisma.service';
 import { CommonError } from 'src/exceptions/common.error';
 import { CreateLightTaskInput, CreateTaskInput } from './dto/create-task.input';
-import { UpdateTaskInput } from './dto/update-task.input';
+import { UpdateLightTaskInput, UpdateTaskInput } from './dto/update-task.input';
 import { CreatedTaskData } from './entities/createdTaskData.entity';
 import { TaskData } from './entities/taskData.entity';
 
@@ -27,14 +27,14 @@ export class TasksService {
     })
   }
 
-  private prepareLightTaskData(task:LightTask & {
+  private prepareLightTaskData(task: LightTask & {
     executor: (LightTasksOnExecutors & {
-        executor: User;
+      executor: User;
     })[];
     status: {
-        name: string;
+      name: string;
     };
-}) {
+  }) {
     return ({
       ...task,
       executor: [
@@ -44,6 +44,25 @@ export class TasksService {
       ],
       status: task.status.name
     })
+  }
+
+  private prepareLightTasksData(tasks: (LightTask & {
+    executor: (LightTasksOnExecutors & {
+      executor: User;
+    })[];
+    status: {
+      name: string;
+    };
+  })[]) {
+    return tasks.map(task => ({
+      ...task,
+      executor: [
+        ...task.executor.map(e => ({
+          ...e.executor
+        }))
+      ],
+      status: task.status.name
+    }))
   }
 
   private prepareTasksData(tasks: (Task & {
@@ -61,7 +80,7 @@ export class TasksService {
     }))
   }
 
-  async createLightTask({executorIds, ...data}: CreateLightTaskInput) {
+  async createLightTask({ executorIds, ...data }: CreateLightTaskInput) {
     const executorsData = []
     if (executorIds.length) {
       for (let i = 0; i < executorIds.length; i++) {
@@ -75,12 +94,12 @@ export class TasksService {
       }
     }
     const createdTask = await this.prisma.lightTask.create({
-      data:{
+      data: {
         ...data,
-          executor: {
-            create: executorsData
-          },
-        
+        executor: {
+          create: executorsData
+        },
+
       },
       include: {
         executor: {
@@ -88,9 +107,9 @@ export class TasksService {
             executor: true
           }
         },
-        status:{
-          select:{
-            name:true
+        status: {
+          select: {
+            name: true
           }
         }
       }
@@ -134,7 +153,7 @@ export class TasksService {
           executors: {
             create: executorsData
           },
-          tags:{
+          tags: {
             create: tagsData
           }
         },
@@ -185,6 +204,33 @@ export class TasksService {
       });
 
       const prepareTasksData = this.prepareTasksData(tasks)
+      return prepareTasksData
+    } catch (e) {
+      CommonError.ServerError()
+    }
+  }
+
+  async getLightTasksByProjectId(projectId: number) {
+    try {
+      const tasks = await this.prisma.lightTask.findMany({
+        where: {
+          projectId
+        },
+        include: {
+          executor: {
+            include: {
+              executor: true
+            }
+          },
+          status: {
+            select: {
+              name: true
+            }
+          }
+        }
+      });
+
+      const prepareTasksData = this.prepareLightTasksData(tasks)
       return prepareTasksData
     } catch (e) {
       CommonError.ServerError()
@@ -244,6 +290,61 @@ export class TasksService {
       });
 
       const prepareTaskData = this.prepareTaskData(updatedTask)
+      return prepareTaskData
+    } catch (e) {
+      CommonError.ServerError()
+    }
+  }
+
+  async updateLightTask(id: number, data: UpdateLightTaskInput) {
+    try {
+      const updatedTask = await this.prisma.lightTask.update({
+        where: {
+          id
+        },
+        data,
+        include: {
+          executor: {
+            include: {
+              executor: true
+            }
+          },
+          status:{
+            select:{
+              name:true
+            }
+          }
+        }
+      });
+
+      const prepareTaskData = this.prepareLightTaskData(updatedTask)
+      return prepareTaskData
+    } catch (e) {
+      CommonError.ServerError()
+    }
+  }
+
+  async removeLightTask(id: number) {
+    try {
+      const removedTask = await this.prisma.lightTask.delete({
+        where: {
+          id
+        },
+        include: {
+          executor: {
+            include: {
+              executor: true
+            }
+          },
+          status:{
+            select:{
+              name:true
+            }
+          }
+        }
+      });
+
+      const prepareTaskData = this.prepareLightTaskData(removedTask)
       return prepareTaskData
     } catch (e) {
       CommonError.ServerError()
