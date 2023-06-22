@@ -6,6 +6,7 @@ import { GetProjectsInput } from './dto/get-projects.input';
 import { UpdateProjectInput } from './dto/update-project.input';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { AddMembersInput } from './dto/add-members-project.input copy';
 
 @Resolver(() => Project)
 @UseGuards(AuthGuard)
@@ -28,10 +29,7 @@ export class ProjectsResolver {
   }
 
   @Mutation(() => Project)
-  addMemberInProject(@Args('addMemberInProjectInput') addMemberInProjectInput: {
-    projectId: number,
-    memberId: number
-  }) {
+  addMemberInProject(@Args('addMemberInProjectInput') addMemberInProjectInput: AddMembersInput) {
     return this.projectsService.addMemberInProject(addMemberInProjectInput);
   }
 
