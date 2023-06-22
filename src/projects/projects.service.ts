@@ -8,31 +8,31 @@ import { UpdateProjectInput } from './dto/update-project.input';
 
 @Injectable()
 export class ProjectsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async createProject(data: CreateProjectInput) {
     return this.prisma.project.create({ data });
   }
 
-  async getProjectsByOwnerId({ownerId}: GetProjectsInput) {
+  async getProjectsByOwnerId({ ownerId }: GetProjectsInput) {
     return this.prisma.project.findMany({
-      where:{
+      where: {
         ownerId
       }
     });
   }
 
-  async addMemberInProject({projectId, memberId}: AddMembersInput) {
+  async addMemberInProject({ projectId, memberId }: AddMembersInput) {
     return this.prisma.projectsOnUsers.create({
-      data:{
+      data: {
         assignedBy: 'Owner',
-        project:{
-          connect:{
+        project: {
+          connect: {
             id: projectId
           }
         },
-        user:{
-          connect:{
+        user: {
+          connect: {
             id: memberId
           }
         },
@@ -41,59 +41,51 @@ export class ProjectsService {
   }
 
   async getProjectById(projectId: number) {
+    const projectUsers = await this.prisma.user.findMany({
+      where: {
+        projects: {
+          every: {
+            projectId
+          }
+        }
+      }
+    })
+
+    const projectTasks = await this.prisma.task.findMany({
+      where: {
+        projectId
+      }
+    })
+
     const project = await this.prisma.project.findFirst({
       where: {
         id: projectId,
       },
-      include:{
-        members:{
-          include:{
-            user:{
-              select:{
-                id: true,
-                firstName: true,
-                lastName: true,
-                email: true,
-              }
-            }
-          }
-        },
-        tasks:{
-          select:{
-            id: true,
-            name: true,
-            description: true,
-            deadline: true,
-            executors: true,
-            statusId: true
-          },
-        },
-      }
     });
-    if(!project) {
+    if (!project) {
       throw ProjectError.ProjectNotFound()
     }
-    return project
+    return ({...project, members: projectUsers, tasks: projectTasks})
   }
 
- async deleteProject(projectId:number) {
+  async deleteProject(projectId: number) {
     return this.prisma.project.delete({
-      where:{
+      where: {
         id: projectId
       }
     })
- }
+  }
 
- async updateProject({id, name, description}: UpdateProjectInput) {
-  return this.prisma.project.update({
-    where:{
-      id
-    },
-    data:{
-      name,
-      description
-    }
-  })
- }
+  async updateProject({ id, name, description }: UpdateProjectInput) {
+    return this.prisma.project.update({
+      where: {
+        id
+      },
+      data: {
+        name,
+        description
+      }
+    })
+  }
 
 }

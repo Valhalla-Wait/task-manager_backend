@@ -1,6 +1,6 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { ProjectsService } from './projects.service';
-import { Project } from './entities/project.entity';
+import { Project, ProjectMore } from './entities/project.entity';
 import { CreateProjectInput } from './dto/create-project.input';
 import { GetProjectsInput } from './dto/get-projects.input';
 import { UpdateProjectInput } from './dto/update-project.input';
@@ -38,7 +38,7 @@ export class ProjectsResolver {
     return this.projectsService.getProjectsByOwnerId(getProjectsInput);
   }
 
-  @Query(() => Project, { name: 'projectsListById' })
+  @Query(() => ProjectMore, { name: 'projectsListById' })
   getProjectsById(@Args('getProjectByIdInput') projectId: number) {
     return this.projectsService.getProjectById(projectId);
   }
