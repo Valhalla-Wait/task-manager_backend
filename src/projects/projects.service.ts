@@ -24,6 +24,7 @@ export class ProjectsService {
   async addMemberInProject({projectId, memberId}: {projectId:number, memberId:number}) {
     return this.prisma.projectsOnUsers.create({
       data:{
+        assignedBy: 'Owner',
         project:{
           connect:{
             id: projectId
@@ -34,8 +35,6 @@ export class ProjectsService {
             id: memberId
           }
         },
-        userId: memberId,
-        projectId: projectId
       },
     });
   }

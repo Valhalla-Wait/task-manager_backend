@@ -27,6 +27,14 @@ export class ProjectsResolver {
     return this.projectsService.updateProject(updateProjectInput);
   }
 
+  @Mutation(() => Project)
+  addMemberInProject(@Args('addMemberInProjectInput') addMemberInProjectInput: {
+    projectId: number,
+    memberId: number
+  }) {
+    return this.projectsService.addMemberInProject(addMemberInProjectInput);
+  }
+
   @Query(() => [Project], { name: 'projectsListByOwnerId' })
   getProjectsByOwnerId(@Args('getProjectsInput') getProjectsInput: GetProjectsInput) {
     return this.projectsService.getProjectsByOwnerId(getProjectsInput);
