@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/db/prisma.service';
 import { ProjectError } from 'src/exceptions/project.error';
+import { AddMembersInput } from './dto/add-members-project.input copy';
 import { CreateProjectInput } from './dto/create-project.input';
 import { GetProjectsInput } from './dto/get-projects.input';
 import { UpdateProjectInput } from './dto/update-project.input';
@@ -21,7 +22,7 @@ export class ProjectsService {
     });
   }
 
-  async addMemberInProject({projectId, memberId}: {projectId:number, memberId:number}) {
+  async addMemberInProject({projectId, memberId}: AddMembersInput) {
     return this.prisma.projectsOnUsers.create({
       data:{
         assignedBy: 'Owner',
