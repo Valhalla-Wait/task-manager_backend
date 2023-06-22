@@ -74,6 +74,7 @@ export class TasksService {
       const createdTask = await this.prisma.task.create({
         data: {
           ...data,
+          statusId: 5,
           executors: {
             create: executorsData
           },
@@ -100,7 +101,8 @@ export class TasksService {
       const prepareTaskData = this.prepareTaskData(createdTask)
       return prepareTaskData
     } catch (e) {
-      CommonError.ServerError()
+      console.log(e)
+      // CommonError.ServerError()
     }
   }
 
@@ -169,26 +171,27 @@ export class TasksService {
           id
         },
         data,
-        include: {
-          executors: {
-            include: {
-              executor: true
-            }
-          },
-          tags: {
-            select: {
-              id: true,
-              name: true,
-              color: true,
-            }
-          },
-        }
+        // include: {
+        //   executors: {
+        //     include: {
+        //       executor: true
+        //     }
+        //   },
+        //   tags: {
+        //     select: {
+        //       id: true,
+        //       name: true,
+        //       color: true,
+        //     }
+        //   },
+        // }
       });
 
-      const prepareTaskData = this.prepareTaskData(updatedTask)
-      return prepareTaskData
+      // const prepareTaskData = this.prepareTaskData(updatedTask)
+      return updatedTask
     } catch (e) {
-      CommonError.ServerError()
+      console.log(e)
+      // CommonError.ServerError()
     }
   }
 

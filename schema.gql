@@ -2,6 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input AddMembersInput {
+  memberId: Int!
+  projectId: Int!
+}
+
 input AddUserGroupInput {
   assignedBy: String!
   groupId: Int!
@@ -110,6 +115,7 @@ input LogoutInput {
 
 type Mutation {
   addLeadInGroup(addLeadInGroup: AddUserGroupInput!): GroupData!
+  addMemberInProject(addMemberInProjectInput: AddMembersInput!): Project!
   addMembersInGroup(addMembersGroupInput: AddUserGroupInput!): GroupData!
   createGroup(createGroupInput: CreateGroupInput!): GroupData!
   createProject(createProjectInput: CreateProjectInput!): Project!
@@ -139,6 +145,15 @@ type Project {
   ownerId: Int!
 }
 
+type ProjectMore {
+  description: String!
+  id: ID!
+  members: [User!]!
+  name: String!
+  ownerId: Int!
+  tasks: [Task!]!
+}
+
 type Query {
   getCurrentUser: User!
   getTagsByTaskId(taskId: Int!): [Tag!]!
@@ -150,7 +165,7 @@ type Query {
   projectAnalyticsByGroups(projectId: Int!): [TasksAnalyticByGroups!]!
   projectAnalyticsByUsers(projectId: Int!): [TasksAnalyticByUsers!]!
   projectAnalyticsGroupByUsers(getGroupAnalyticByIdInput: getGroupAnalyticInput!): [TasksAnalyticByUsers!]!
-  projectsListById(getProjectByIdInput: Float!): Project!
+  projectsListById(getProjectByIdInput: Float!): ProjectMore!
   projectsListByOwnerId(getProjectsInput: GetProjectsInput!): [Project!]!
   refresh(refreshInput: RefreshInput!): LoginUserData!
   status(id: Int!): Status!
@@ -202,6 +217,18 @@ type Tag {
   id: ID!
   name: String!
   taskId: Int!
+}
+
+type Task {
+  authorId: Int!
+  createdAt: DateTime!
+  deadline: DateTime!
+  description: String!
+  groupId: Int!
+  id: ID!
+  name: String!
+  projectId: Int!
+  statusId: Int!
 }
 
 type TaskData {
@@ -272,7 +299,7 @@ input UpdateTaskInput {
   id: Int!
   name: String
   projectId: Int
-  statusId: Int!
+  statusId: Int
   tagIds: [Int!]
 }
 

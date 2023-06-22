@@ -54,6 +54,19 @@ export class ProjectsService {
     const projectTasks = await this.prisma.task.findMany({
       where: {
         projectId
+      },
+      include:{
+        executors:{
+          select:{
+            executor:{
+              select:{
+                id: true,
+                firstName: true,
+                lastName: true
+              }
+            }
+          }
+        }
       }
     })
 
@@ -65,7 +78,12 @@ export class ProjectsService {
     if (!project) {
       throw ProjectError.ProjectNotFound()
     }
-    return ({...project, members: projectUsers, tasks: projectTasks})
+    return ({...project, members: projectUsers, tasks: projectTasks.map(({id, name, description,executors}) =>({
+      id,
+      name,
+      description,
+      executors: executors.map(ex => ex.executor)
+    }))})
   }
 
   async deleteProject(projectId: number) {

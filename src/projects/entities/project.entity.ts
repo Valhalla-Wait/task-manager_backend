@@ -38,3 +38,7 @@ export class ProjectMore {
   members: User[];
 }
 
+
+
+ObjectType()
+export class ProjectTask {}
