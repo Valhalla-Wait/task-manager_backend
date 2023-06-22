@@ -32,6 +32,22 @@ export class ProjectsService {
     });
   }
 
+  async deleteMemberInProject({ projectId, memberId }: AddMembersInput) {
+    return this.prisma.projectsOnUsers.delete({
+      where:{
+        userId_projectId: {
+          userId: memberId,
+          projectId
+        }
+      }
+      // data: {
+      //   assignedBy: 'Owner',
+      //   projectId,
+      //   userId: memberId,
+      // },
+    });
+  }
+
   async getProjectById(projectId: number) {
     const projectUsers = await this.prisma.user.findMany({
       where: {

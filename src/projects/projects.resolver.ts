@@ -7,6 +7,7 @@ import { UpdateProjectInput } from './dto/update-project.input';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { AddMembersInput } from './dto/add-members-project.input copy';
+import { DeleteMembersInput } from './dto/delete-members-project.input';
 
 @Resolver(() => Project)
 @UseGuards(AuthGuard)
@@ -31,6 +32,11 @@ export class ProjectsResolver {
   @Mutation(() => Project)
   addMemberInProject(@Args('addMemberInProjectInput') addMemberInProjectInput: AddMembersInput) {
     return this.projectsService.addMemberInProject(addMemberInProjectInput);
+  }
+
+  @Mutation(() => Project)
+  deleteMemberInProject(@Args('deleteMemberInProjectInput') deleteMemberInProjectInput: DeleteMembersInput) {
+    return this.projectsService.deleteMemberInProject(deleteMemberInProjectInput);
   }
 
   @Query(() => [Project], { name: 'projectsListByOwnerId' })
