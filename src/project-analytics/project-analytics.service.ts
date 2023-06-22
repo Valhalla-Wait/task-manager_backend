@@ -170,11 +170,11 @@ export class ProjectAnalyticsService {
 
     const projectUsers = await this.prisma.user.findMany({
       where: {
-        projects: {
-          some: {
-            id: projectId
-          }
+       projects:{
+        some:{
+          projectId
         }
+       }
       },
     })
 
