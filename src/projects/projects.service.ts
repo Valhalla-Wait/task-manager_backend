@@ -65,15 +65,8 @@ export class ProjectsService {
             description: true,
             deadline: true,
             executors: true,
+            statusId: true
           },
-          include:{
-            status:{
-              select:{
-                id: true,
-                name: true
-              }
-            }
-          }
         },
       }
     });
