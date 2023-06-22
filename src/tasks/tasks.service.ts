@@ -100,6 +100,7 @@ export class TasksService {
       const prepareTaskData = this.prepareTaskData(createdTask)
       return prepareTaskData
     } catch (e) {
+      console.log(e)
       CommonError.ServerError()
     }
   }
