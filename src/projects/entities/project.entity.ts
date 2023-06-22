@@ -38,3 +38,18 @@ export class ProjectMore {
   members: User[];
 }
 
+@ObjectType()
+export class ProjectsOnUsers {
+  @Field(() => Int)
+  userId: number;
+
+  @Field(() => String)
+  assignedAt: string;
+
+  @Field(() => String)
+  assignedBy: string;
+
+  @Field(() => Int)
+  projectId: number;
+}
+
