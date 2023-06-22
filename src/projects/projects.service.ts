@@ -26,16 +26,8 @@ export class ProjectsService {
     return this.prisma.projectsOnUsers.create({
       data: {
         assignedBy: 'Owner',
-        project: {
-          connect: {
-            id: projectId
-          }
-        },
-        user: {
-          connect: {
-            id: memberId
-          }
-        },
+        projectId,
+        userId: memberId,
       },
     });
   }
