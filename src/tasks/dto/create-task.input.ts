@@ -18,10 +18,10 @@ export class CreateTaskInput {
   @Field(() => Int)
   projectId: number;
 
-  @Field(() => Int)
+  @Field(() => Int, {nullable: true})
   groupId: number;
 
-  @Field(() => [Int])
+  @Field(() => [Int], {nullable: true})
   tagIds: number[];
 
   @Field(() => [Int])
