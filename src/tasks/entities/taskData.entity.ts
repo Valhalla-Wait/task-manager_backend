@@ -56,3 +56,34 @@ class TaskTag {
   @Field(() => String)
   color: string;
 }
+
+
+@ObjectType()
+export class LightTaskData {
+  @Field(() => ID)
+  id: number;
+
+  @Field(() => String)
+  name: string;
+
+  @Field(() => String)
+  description: string;
+
+  @Field(() => Int)
+  authorId: number;
+
+  @Field(() => Status)
+  status:string;
+
+  @Field(() => GraphQLISODateTime)
+  createdAt: string;
+
+  @Field(() => GraphQLISODateTime)
+  deadline: Date;
+
+  @Field(() => Int)
+  projectId: number;
+
+  @Field(() => [User])
+  executor: User[];
+}

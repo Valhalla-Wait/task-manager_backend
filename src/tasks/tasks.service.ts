@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, Task, TasksOnExecutors, User } from '@prisma/client';
+import { LightTask, LightTasksOnExecutors, Prisma, Task, TasksOnExecutors, User } from '@prisma/client';
 import { PrismaService } from 'src/db/prisma.service';
 import { CommonError } from 'src/exceptions/common.error';
-import { CreateTaskInput } from './dto/create-task.input';
+import { CreateLightTaskInput, CreateTaskInput } from './dto/create-task.input';
 import { UpdateTaskInput } from './dto/update-task.input';
 import { CreatedTaskData } from './entities/createdTaskData.entity';
 import { TaskData } from './entities/taskData.entity';
@@ -27,6 +27,25 @@ export class TasksService {
     })
   }
 
+  private prepareLightTaskData(task:LightTask & {
+    executor: (LightTasksOnExecutors & {
+        executor: User;
+    })[];
+    status: {
+        name: string;
+    };
+}) {
+    return ({
+      ...task,
+      executor: [
+        ...task.executor.map(e => ({
+          ...e.executor
+        }))
+      ],
+      status: task.status.name
+    })
+  }
+
   private prepareTasksData(tasks: (Task & {
     executors: (TasksOnExecutors & {
       executor: User;
@@ -40,6 +59,44 @@ export class TasksService {
         }))
       ]
     }))
+  }
+
+  async createLightTask({executorIds, ...data}: CreateLightTaskInput) {
+    const executorsData = []
+    if (executorIds.length) {
+      for (let i = 0; i < executorIds.length; i++) {
+        executorsData.push({
+          executor: {
+            connect: {
+              id: executorIds[i]
+            }
+          }
+        })
+      }
+    }
+    const createdTask = await this.prisma.lightTask.create({
+      data:{
+        ...data,
+          executor: {
+            create: executorsData
+          },
+        
+      },
+      include: {
+        executor: {
+          include: {
+            executor: true
+          }
+        },
+        status:{
+          select:{
+            name:true
+          }
+        }
+      }
+    })
+    const prepareData = this.prepareLightTaskData(createdTask)
+    return prepareData
   }
 
   async create({ executorIds, tagIds, ...data }: CreateTaskInput) {

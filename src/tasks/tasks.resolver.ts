@@ -1,11 +1,11 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { TasksService } from './tasks.service';
 import { Task } from './entities/task.entity';
-import { CreateTaskInput } from './dto/create-task.input';
+import { CreateLightTaskInput, CreateTaskInput } from './dto/create-task.input';
 import { UpdateTaskInput } from './dto/update-task.input';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { TaskData } from './entities/taskData.entity';
+import { LightTaskData, TaskData } from './entities/taskData.entity';
 
 @Resolver(() => Task)
 @UseGuards(AuthGuard)
@@ -15,6 +15,11 @@ export class TasksResolver {
   @Mutation(() => TaskData)
   createTask(@Args('createTaskInput') createTaskInput: CreateTaskInput) {
     return this.tasksService.create(createTaskInput);
+  }
+
+  @Mutation(() => LightTaskData)
+  createLightTask(@Args('createLightTaskInput') createLightTaskInput: CreateLightTaskInput) {
+    return this.tasksService.createLightTask(createLightTaskInput);
   }
 
   @Query(() => [TaskData], { name: 'tasksByProjectId' })

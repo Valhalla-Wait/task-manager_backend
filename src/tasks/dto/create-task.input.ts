@@ -27,3 +27,25 @@ export class CreateTaskInput {
   @Field(() => [Int])
   executorIds: number[];
 }
+
+@InputType()
+export class CreateLightTaskInput {
+
+  @Field(() => String)
+  name: string;
+
+  @Field(() => String)
+  description: string;
+
+  @Field(() => Int)
+  authorId: number;
+
+  @Field(() => GraphQLISODateTime)
+  deadline: Date;
+
+  @Field(() => Int)
+  projectId: number;
+
+  @Field(() => [Int])
+  executorIds: number[];
+}

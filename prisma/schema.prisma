@@ -25,7 +25,9 @@ model User {
   groups GroupsOnUsers[]
   groupsLeadership Group[]
   tasks Task[]
+  lightTasks LightTask[]
   assignedTasks TasksOnExecutors[]
+  assignedLightTasks LightTasksOnExecutors[]
 }
 
 model Token {
@@ -42,6 +44,7 @@ model Project {
   ownerId Int
   groups Group[]
   tasks Task[]
+  lightTasks LightTask[]
   members ProjectsOnUsers[]
 }
 
@@ -90,6 +93,7 @@ model Status {
   id Int @id @default(autoincrement())
   name String
   tasks Task[]
+  lightTasks LightTask[]
 }
 
 // model TasksOnTags {
@@ -119,6 +123,15 @@ model Status {
    @@id([taskId, executorId])
 }
 
+ model LightTasksOnExecutors {
+  task LightTask @relation(fields: [taskId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  taskId Int
+  executor User @relation(fields: [executorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  executorId Int
+
+   @@id([taskId, executorId])
+}
+
 model Task {
   id Int @id @default(autoincrement())
   name String
@@ -135,6 +148,21 @@ model Task {
   projectId Int
   group Group @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   groupId Int
+}
+
+model LightTask {
+  id Int @id @default(autoincrement())
+  name String
+  description String
+  author User @relation(fields: [authorId], references: [id])
+  authorId Int
+  executor LightTasksOnExecutors[]
+  createdAt DateTime @default(now())
+  deadline DateTime
+  status Status @relation(fields: [statusId], references: [id])
+  statusId Int @default(1)
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  projectId Int
 }
 
 
