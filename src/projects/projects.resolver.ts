@@ -1,6 +1,6 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { ProjectsService } from './projects.service';
-import { Project, ProjectMore, ProjectsOnUsers } from './entities/project.entity';
+import { Project, ProjectMore } from './entities/project.entity';
 import { CreateProjectInput } from './dto/create-project.input';
 import { GetProjectsInput } from './dto/get-projects.input';
 import { UpdateProjectInput } from './dto/update-project.input';
@@ -29,12 +29,12 @@ export class ProjectsResolver {
     return this.projectsService.updateProject(updateProjectInput);
   }
 
-  @Mutation(() => ProjectsOnUsers)
+  @Mutation(() => Project)
   addMemberInProject(@Args('addMemberInProjectInput') addMemberInProjectInput: AddMembersInput) {
     return this.projectsService.addMemberInProject(addMemberInProjectInput);
   }
 
-  @Mutation(() => ProjectsOnUsers)
+  @Mutation(() => Project)
   deleteMemberInProject(@Args('deleteMemberInProjectInput') deleteMemberInProjectInput: DeleteMembersInput) {
     return this.projectsService.deleteMemberInProject(deleteMemberInProjectInput);
   }
